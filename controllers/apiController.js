@@ -12,7 +12,7 @@ module.exports = {
       const mostPicked = await Item.find()
         .select('_id title country city price unit imageId')
         .limit(5)
-        .populate({ path: 'imageId', select: '_id imageUrl' })
+        .populate({ path: 'imageId', select: '_id imageUrl' });
 
       const category = await Category.find()
         .select('_id name')
@@ -25,9 +25,9 @@ module.exports = {
           populate: {
             path: 'imageId',
             select: '_id imageUrl',
-            perDocumentLimit: 1
-          }
-        })
+            perDocumentLimit: 1,
+          },
+        });
 
       const treveler = await Treveler.find();
       const treasure = await Treasure.find();
@@ -46,28 +46,29 @@ module.exports = {
       }
 
       const testimonial = {
-        _id: "asd1293uasdads1",
-        imageUrl: "images/testimonial2.jpg",
-        name: "Happy Family",
+        _id: 'asd1293uasdads1',
+        imageUrl: 'images/testimonial2.jpg',
+        name: 'Happy Family',
         rate: 4.55,
-        content: "What a great trip with my family and I should try again next time soon ...",
-        familyName: "Angga",
-        familyOccupation: "Product Designer"
-      }
+        content:
+          'What a great trip with my family and I should try again next time soon ...',
+        familyName: 'Angga',
+        familyOccupation: 'Product Designer',
+      };
 
       res.status(200).json({
         hero: {
           travelers: treveler.length,
           treasures: treasure.length,
-          cities: city.length
+          cities: city.length,
         },
         mostPicked,
         category,
-        testimonial
-      })
+        testimonial,
+      });
     } catch (error) {
       console.log(error);
-      res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ message: 'Internal server error' });
     }
   },
 
@@ -82,23 +83,23 @@ module.exports = {
       const bank = await Bank.find();
 
       const testimonial = {
-        _id: "asd1293uasdads1",
-        imageUrl: "images/testimonial1.jpg",
-        name: "Happy Family",
+        _id: 'asd1293uasdads1',
+        imageUrl: 'images/testimonial1.jpg',
+        name: 'Happy Family',
         rate: 4.55,
-        content: "What a great trip with my family and I should try again next time soon ...",
-        familyName: "Angga",
-        familyOccupation: "Product Designer"
-      }
+        content:
+          'What a great trip with my family and I should try again next time soon ...',
+        familyName: 'Angga',
+        familyOccupation: 'Product Designer',
+      };
 
       res.status(200).json({
         ...item._doc,
         bank,
-        testimonial
-      })
-
+        testimonial,
+      });
     } catch (error) {
-      res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ message: 'Internal server error' });
     }
   },
 
@@ -118,10 +119,10 @@ module.exports = {
     } = req.body;
 
     if (!req.file) {
-      return res.status(404).json({ message: "Image not found" });
+      return res.status(404).json({ message: 'Image not found' });
     }
 
-    console.log(idItem)
+    console.log(idItem);
 
     if (
       idItem === undefined ||
@@ -134,14 +135,15 @@ module.exports = {
       email === undefined ||
       phoneNumber === undefined ||
       accountHolder === undefined ||
-      bankFrom === undefined) {
-      res.status(404).json({ message: "Lengkapi semua field" });
+      bankFrom === undefined
+    ) {
+      res.status(404).json({ message: 'Lengkapi semua field' });
     }
 
     const item = await Item.findOne({ _id: idItem });
 
     if (!item) {
-      return res.status(404).json({ message: "Item not found" });
+      return res.status(404).json({ message: 'Item not found' });
     }
 
     item.sumBooking += 1;
@@ -149,7 +151,7 @@ module.exports = {
     await item.save();
 
     let total = item.price * duration;
-    let tax = total * 0.10;
+    let tax = total * 0.1;
 
     const invoice = Math.floor(1000000 + Math.random() * 9000000);
 
@@ -157,31 +159,31 @@ module.exports = {
       firstName,
       lastName,
       email,
-      phoneNumber
+      phoneNumber,
     });
 
     const newBooking = {
       invoice,
       bookingStartDate,
       bookingEndDate,
-      total: total += tax,
+      total: (total += tax),
       itemId: {
         _id: item.id,
         title: item.title,
         price: item.price,
-        duration: duration
+        duration: duration,
       },
 
       memberId: member.id,
       payments: {
         proofPayment: `images/${req.file.filename}`,
         bankFrom: bankFrom,
-        accountHolder: accountHolder
-      }
-    }
+        accountHolder: accountHolder,
+      },
+    };
 
     const booking = await Booking.create(newBooking);
 
-    res.status(201).json({ message: "Success Booking", booking });
-  }
-}
+    res.status(201).json({ message: 'Success Booking', booking });
+  },
+};
