@@ -33,8 +33,14 @@
               <label for="name">Image</label>
               <input type="file" class="form-control" name="image" required />
             </div>
+            <<<<<<< HEAD
             <input type="hidden" value="<%= itemId %>" name="itemId" />
+            =======
+            <input type="hidden" value="<%= itemId %>" name="itemId" />
+            <% if(user.role == 'admin') { %> >>>>>>>
+            5bb4de77a57cb916df93b47df47063216b0cee23
             <button type="submit" class="btn btn-primary">save</button>
+            <% } %>
           </form>
         </div>
         <div class="col-md-7">
@@ -51,7 +57,9 @@
                   <th>Name</th>
                   <th>Type</th>
                   <th>Image URL</th>
+                  <% if(user.role == 'admin') { %>
                   <th>Action</th>
+                  <% } %>
                 </tr>
               </thead>
               <tbody>
@@ -67,6 +75,7 @@
                       width="70px"
                     />
                   </td>
+                  <% if(user.role == 'admin') { %>
                   <td>
                     <form
                       action="/admin/item/<%= itemId %>/activity/<%= activity[i].id %>?_method=DELETE"
@@ -89,6 +98,7 @@
                       </button>
                     </form>
                   </td>
+                  <% } %>
                 </tr>
                 <% } %>
               </tbody>
